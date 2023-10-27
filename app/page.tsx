@@ -4,9 +4,11 @@ import Image from "next/image";
 
 function Page() {
   const [isOpen, setIsOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState(-1);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const toggleDropdown = (index: number) => {
+    setIsOpen(index === openIndex ? !isOpen : true);
+    setOpenIndex(index);
   };
   const [data, setData] = useState([
     {
@@ -17,8 +19,12 @@ function Page() {
       judges: 4,
       score: 100,
       complete: 2,
-      judgeMembers:"Suneng, Rithy, Meysorng, Veha"
+      judgeMember1: "Suneng",
+      judgeMember2: "John",
+      judgeMember3: "David",
+      judgeMember4: "Michael",
     },
+
     {
       No: 2,
       Id: "ieeG8",
@@ -27,7 +33,10 @@ function Page() {
       judges: 4,
       score: 90,
       complete: 2,
-      judgeMembers:"Suneng, Rithy, Meysorng, Veha"
+      judgeMember1: "Veha",
+      judgeMember2: "James",
+      judgeMember3: "Robert",
+      judgeMember4: "William",
     },
     {
       No: 3,
@@ -37,8 +46,12 @@ function Page() {
       judges: 4,
       score: 70,
       complete: 3,
-      judgeMembers:"Suneng, Rithy, Meysorng, Veha"
+      judgeMember1: "Rithy",
+      judgeMember2: "Richard",
+      judgeMember3: "Joseph",
+      judgeMember4: "Thomas",
     },
+
     {
       No: 4,
       Id: "atmG8",
@@ -47,21 +60,16 @@ function Page() {
       judges: 4,
       score: 100,
       complete: 1,
-      judgeMembers:"Suneng, Rithy, Meysorng, Veha"
+      judgeMember1: "Meysorng",
+      judgeMember2: "Christopher",
+      judgeMember3: "Anthony",
+      judgeMember4: "Mark",
     },
   ]);
-  const [ascending, setAscending] = useState(true);
 
   const sortScore = () => {
-    const sortedData = [...data].sort((a, b) => {
-      if (ascending) {
-        return b.score - a.score;
-      } else {
-        return a.score - b.score;
-      }
-    });
+    const sortedData = [...data].sort((a, b) => b.score - a.score);
     setData(sortedData);
-    setAscending(!ascending);
   };
 
   return (
@@ -99,12 +107,12 @@ function Page() {
             </tr>
           </thead>
           <tbody>
-            {data.map((row) => (
+            {data.map((row, index) => (
               <tr
                 key={row.Id}
                 className={`table-row  ${
                   row.complete === 1
-                    ? "bg-green-200"
+                    ? "bg-green-300"
                     : row.complete === 2
                     ? "bg-yellow-200"
                     : ""
@@ -115,21 +123,38 @@ function Page() {
                 <td className="px-5 py-5 border-y-2 ">{row.projectName}</td>
                 <td className="px-5 py-5 border-y-2 ">{row.leader}</td>
                 <td
-                  className={`px-5 py-5 border-y-2 `}
-                  onClick={toggleDropdown}
+                  className={`px-5 py-5 border-y-2 cursor-pointer ${
+                    index === openIndex ? "border-y-02" : ""
+                  }`}
+                  onClick={() => toggleDropdown(index)}
                 >
                   {row.judges}
-                  <div className="absolute">
-
-                  {isOpen && (
-                    <div className="bg-red-500 z-50 relative">
-                      <tr>{row.judgeMembers}</tr>
+                  <div className="flex justify-center">
+                    <div
+                      className={`${
+                        isOpen && index === openIndex ? "" : "hidden"
+                      } absolute bg-gray-200 shadow-xl  rounded-md mt-2 duration-700`}
+                    >
+                      <h1 className="p-2 text-center font-semibold">
+                        Judge Member
+                      </h1>
+                      <p className="p-2 w-32 text-center text-black">
+                        {row.judgeMember1}
+                      </p>
+                      <p className="p-2 w-32 text-center text-black">
+                        {row.judgeMember2}
+                      </p>
+                      <p className="p-2 w-32 text-center text-black">
+                        {row.judgeMember3}
+                      </p>
+                      <p className="p-2 w-32 text-center text-black">
+                        {row.judgeMember4}
+                      </p>
                     </div>
-                  )}
                   </div>
                 </td>
-
                 <td className="px-5 py-5 border-y-2 ">{row.score}</td>
+                <td className="px-5 py-5 border-y-2">Evaluate</td>
                 <td className="opacity-0">{row.complete}</td>
               </tr>
             ))}
