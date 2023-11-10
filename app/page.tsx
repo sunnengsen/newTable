@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import Modal from "./modal"
 
 function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,10 +20,7 @@ function Page() {
       judges: 4,
       score: 100,
       complete: 2,
-      judgeMember1: "Suneng",
-      judgeMember2: "John",
-      judgeMember3: "David",
-      judgeMember4: "Michael",
+
     },
 
     {
@@ -33,10 +31,7 @@ function Page() {
       judges: 4,
       score: 90,
       complete: 2,
-      judgeMember1: "Veha",
-      judgeMember2: "James",
-      judgeMember3: "Robert",
-      judgeMember4: "William",
+      
     },
     {
       No: 3,
@@ -45,11 +40,8 @@ function Page() {
       leader: "Meysorng",
       judges: 4,
       score: 70,
-      complete: 3,
-      judgeMember1: "Rithy",
-      judgeMember2: "Richard",
-      judgeMember3: "Joseph",
-      judgeMember4: "Thomas",
+      complete: 1,
+      
     },
 
     {
@@ -59,17 +51,33 @@ function Page() {
       leader: "Veha",
       judges: 4,
       score: 100,
+      complete: 3,
+      
+    },
+    {
+      No: 5,
+      Id: "atmG7",
+      projectName: "DigiTran (Digital Transformation)",
+      leader: "Veha",
+      judges: 4,
+      score: 10,
       complete: 1,
-      judgeMember1: "Meysorng",
-      judgeMember2: "Christopher",
-      judgeMember3: "Anthony",
-      judgeMember4: "Mark",
+      
     },
   ]);
 
+  const [isAscending, setIsAscending] = useState(true);
+
   const sortScore = () => {
-    const sortedData = [...data].sort((a, b) => b.score - a.score);
+    const sortedData = [...data].sort((a, b) => {
+      if (isAscending) {
+        return a.score - b.score;
+      } else {
+        return b.score - a.score;
+      }
+    });
     setData(sortedData);
+    setIsAscending(!isAscending);
   };
 
   return (
@@ -79,7 +87,7 @@ function Page() {
       </h1>
       <div className="flex justify-center ">
         <table className="table-auto  border-1 rounded-lg bg-white mt-10 border-gray-400 shadow-2xl">
-          <thead>
+          <thead className="">
             <tr>
               <th className="p-5 text-start" key="No">
                 No
@@ -93,9 +101,7 @@ function Page() {
               <th className="p-5 text-start" key="leader">
                 Leader
               </th>
-              <th className="p-5 text-start" key="judges">
-                Judges
-              </th>
+             
               <th
                 className="p-5 text-start cursor-pointer flex justify-center"
                 key="score"
@@ -110,51 +116,21 @@ function Page() {
             {data.map((row, index) => (
               <tr
                 key={row.Id}
-                className={`table-row  ${
+                className={`table-row rounded-xl  ${
                   row.complete === 1
-                    ? "bg-green-300"
+                    ? "bg-green-300 rounded-md"
                     : row.complete === 2
                     ? "bg-yellow-200"
                     : ""
                 }`}
               >
-                <td className="px-5 py-5 border-y-2 ">{row.No}</td>
-                <td className="px-5 py-5 border-y-2 ">{row.Id}</td>
-                <td className="px-5 py-5 border-y-2 ">{row.projectName}</td>
-                <td className="px-5 py-5 border-y-2 ">{row.leader}</td>
-                <td
-                  className={`px-5 py-5 border-y-2 cursor-pointer ${
-                    index === openIndex ? "border-y-02" : ""
-                  }`}
-                  onClick={() => toggleDropdown(index)}
-                >
-                  {row.judges}
-                  <div className="flex justify-center">
-                    <div
-                      className={`${
-                        isOpen && index === openIndex ? "" : "hidden"
-                      } absolute bg-gray-200 shadow-xl  rounded-md mt-2 duration-700`}
-                    >
-                      <h1 className="p-2 text-center font-semibold">
-                        Judge Member
-                      </h1>
-                      <p className="p-2 w-32 text-center text-black">
-                        {row.judgeMember1}
-                      </p>
-                      <p className="p-2 w-32 text-center text-black">
-                        {row.judgeMember2}
-                      </p>
-                      <p className="p-2 w-32 text-center text-black">
-                        {row.judgeMember3}
-                      </p>
-                      <p className="p-2 w-32 text-center text-black">
-                        {row.judgeMember4}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-5 py-5 border-y-2 ">{row.score}</td>
-                <td className="px-5 py-5 border-y-2">Evaluate</td>
+                <td className="px-5 py-4 border-y-2 ">{row.No}</td>
+                <td className="px-5 py-4 border-y-2 ">{row.Id}</td>
+                <td className="px-5 py-4 border-y-2 ">{row.projectName}</td>
+                <td className="px-5 py-4 border-y-2 ">{row.leader}</td>
+                <td className="px-5 py-4 border-y-2 ">{row.score}</td>
+                <td className="px-5 py-4 border-y-2">Evaluate</td>
+                <td className="px-5 py-4 border-y-2 "><Modal/></td>
                 <td className="opacity-0">{row.complete}</td>
               </tr>
             ))}
